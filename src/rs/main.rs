@@ -4,8 +4,9 @@ extern crate rustc_serialize;
 
 mod cmd;
 
-use docopt::{Docopt};
 use std::{env, process};
+
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 pub fn main() {
     match cmd::run(env::args()) {
@@ -19,10 +20,5 @@ pub fn main() {
             process::exit(1);
         }
         _ => {}
-    }
-
-    if let Err(e) = cmd::run(env::args()) {
-        println!("ERROR!!!! {:?}", e);
-        process::exit(1);
     }
 }
