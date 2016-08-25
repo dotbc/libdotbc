@@ -11,8 +11,10 @@ Options:
     -h, --help      Show this message
 ";
 
+use dotbc::DotBC;
 use super::Error;
 use docopt::Docopt;
+use std::path::Path;
 
 #[derive(Debug, RustcDecodable)]
 struct Args {
@@ -29,7 +31,31 @@ pub fn run(argv: Vec<String>) -> Result<(), Error> {
     // Decode the args into a struct
     let args: Args = try!(docopt.decode());
 
-    println!("write-file: {:?}", args);
+    // Parse the path
+    let path = Path::new(&args.flag_f);
+
+    // The archive
+    let mut dotbc;
+
+    if !path.exists() {
+        if !args.flag_c {
+            return Err(Error::FileNotFound(args.flag_f.clone()));
+        }
+
+        dotbc = DotBC::new();
+    } else {
+        dotbc = try!(DotBC::open(path));
+    }
+
+    match args.arg_data {
+        Some(ref data) => {
+            dotbc.put(&args.arg_path[..], data.as_bytes());
+        }
+        None => unimplemented!(),
+    }
+
+    try!(dotbc.save(path));
+
     Ok(())
 }
 

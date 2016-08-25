@@ -61,7 +61,7 @@ impl DotBC {
         let mut zip = ZipWriter::new(file);
 
         for (path, data) in &self.files {
-            try!(zip.start_file(&**path, zip::CompressionMethod::Bzip2));
+            try!(zip.start_file(&**path, zip::CompressionMethod::Deflated));
             try!(zip.write(data));
         }
 

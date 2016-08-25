@@ -30,6 +30,7 @@ use docopt::{self, Docopt};
 pub enum Error {
     Docopt(docopt::Error),
     DotBC(dotbc::Error),
+    FileNotFound(String),
 }
 
 /// Run the command specified with the given set of arguments
