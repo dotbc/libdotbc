@@ -1,4 +1,5 @@
 
+mod ls_files;
 mod read_file;
 mod show_metadata;
 mod write_file;
@@ -18,6 +19,7 @@ Options:
     --version       Print the version
 
 The most commonly used commands are:
+    ls-files         List all files in a .bc archive
     read-file        Read a file contained by a .bc archive
     show-metadata    Show the .bc metadata as JSON
     write-file       Write a file to a .bc archive
@@ -25,9 +27,11 @@ The most commonly used commands are:
 
 use dotbc;
 use docopt::{self, Docopt};
+use std::io;
 
 #[derive(Debug)]
 pub enum Error {
+    Io(io::Error),
     Docopt(docopt::Error),
     DotBC(dotbc::Error),
     FileNotFound(String),
@@ -78,6 +82,7 @@ pub fn run<I, S>(argv: I) -> Result<(), Error>
 
     // Dispatch to the subcommand
     match args.get_str("<cmd>") {
+        "ls-files" => ls_files::run(cmd_args),
         "read-file" => read_file::run(cmd_args),
         "write-file" => write_file::run(cmd_args),
         "show-metadata" => show_metadata::run(cmd_args),
@@ -97,5 +102,11 @@ impl From<docopt::Error> for Error {
 impl From<dotbc::Error> for Error {
     fn from(src: dotbc::Error) -> Error {
         Error::DotBC(src)
+    }
+}
+
+impl From<io::Error> for Error {
+    fn from(src: io::Error) -> Error {
+        Error::Io(src)
     }
 }

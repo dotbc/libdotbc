@@ -58,4 +58,3 @@ pub fn run(argv: Vec<String>) -> Result<(), Error> {
 
     Ok(())
 }
-

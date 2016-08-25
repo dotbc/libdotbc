@@ -22,8 +22,6 @@ struct Args {
 }
 
 pub fn run(argv: Vec<String>) -> Result<(), Error> {
-    println!("SHOW MEtaDATA");
-
     let docopt = try!(Docopt::new(USAGE))
         .argv(argv);
 
